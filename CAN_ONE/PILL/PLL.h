@@ -3,5 +3,6 @@
 
 #include "derivative.h"
 
+void PLL_init(void)；
 
 #endif

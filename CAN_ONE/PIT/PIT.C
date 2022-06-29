@@ -3,10 +3,13 @@
 
 void PIT_Init(void)
 {
-	PITMTLD0=249;     //为0通道8位计数器赋值
-	PITLD0=399;     //为0通道16位计数器赋值   //(249+1)*(63999+1)=16000000个总线周期=1MS
-	PITMUX_PMUX0=0;   //第0通道使用微计数器0
-	PITCFLMT=0X80;    //使能周期中断定时器
+	PITCFLMT_PITE = 0;
+	PITCE_PCE0 = 1;
+	PITMUX = 0x00;
+	PITMTLD0 = 80 - 1;
+	PITLD0 = 400 - 1;
+	PITINTE_PINTE0 = 1;
+	PITCFLMT_PITE = 1;
 }
 
 
@@ -14,7 +17,7 @@ void PIT_Init(void)
 
 void interrupt VectorNumber_Vpit0 PIT0(void)
 {
-	
+	CAN_Send_TIMEBCAK();
 }
 
 #pragma CODE_SEG DEFAULT

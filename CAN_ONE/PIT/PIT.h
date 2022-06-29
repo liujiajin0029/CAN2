@@ -3,5 +3,6 @@
 
 #include "derivative.h"
 
+void PIT_Init(void);
 
 #endif
