@@ -1,7 +1,7 @@
 #include "RelayM.h"
 
 
-void RelayM_Init(Hv_IOInit *_Hv_IOType) //    IO口初始化配置
+void RELAYM_INIT(Hv_IOInit *_Hv_IOType) //    IO口初始化配置
 {
 
     _Hv_IOType->IO_dir = 1;

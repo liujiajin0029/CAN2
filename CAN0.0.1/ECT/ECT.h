@@ -3,6 +3,6 @@
 
 #include "derivative.h"
 
-void initialize_ect(void);
+void ECT_INIT(void);
 
 #endif

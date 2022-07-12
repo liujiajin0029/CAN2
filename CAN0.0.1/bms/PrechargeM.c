@@ -1,6 +1,6 @@
 #include "PrechargeM.h"
 
-void PrechargeM_Init(hw_tab *_hw_tab )
+void PRECHARGEM_INIT(hw_tab *_hw_tab )
 {
   _hw_tab->state_vbat  = BAT_Get();
   _hw_tab->state_v1 = V1_Get();

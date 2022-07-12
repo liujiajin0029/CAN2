@@ -4,7 +4,7 @@
 #include "hidef.h"
 #include "derivative.h"
 
-typedef struct DATA_BLOCK_HW_INFO_s
+typedef struct PrechargeM_Ok
 {
 	float vbat_mV;
 	float v1_mV;

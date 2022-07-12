@@ -1,7 +1,7 @@
 #include "PIT.h"
 #include "derivative.h"
 
-void PIT_Init(void)
+void PIT_INIT(void)
 {
 	PITCFLMT_PITE = 0;
 	PITCE_PCE0 = 1;

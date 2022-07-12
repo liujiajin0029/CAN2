@@ -1,7 +1,7 @@
 #include "ECT.h"
 
 
-void initialize_ect(void)
+void ECT_INIT(void)
 {
 	ECT_TSCR1_TFFCA = 1;  // 定时器标志位快速清除
  	ECT_TSCR1_TEN = 1;    // 定时器使能位. 1=允许定时器正常工作; 0=使主定时器不起作用(包括计数器)

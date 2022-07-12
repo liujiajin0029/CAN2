@@ -1,7 +1,7 @@
 #include "PLL.h"
 #include "derivative.h"
 
-void PLL_init(void)
+void PLL_INIT(void)
 {
 	CLKSEL_PLLSEL = 0;
 	PLLCTL_PLLON = 0;

@@ -10,31 +10,31 @@ typedef enum _CAN_BSP_Type
 {
 	CAN_125K = 0,
 	CAN_250K = 1,
-}CAN_BSP_Type;
+}CAN_BSPType;
 
 typedef struct _CAN_HwCfgType
 {
-	CAN_BSP_Type BPS;
-}CAN_TYPE;
+	CAN_BSPType BPS;
+}CAN_InitType;
 
 typedef struct _can_msg
 {
-	unsigned int id;
-	unsigned char RTR;
-	unsigned char data[Msg_MaxLen];
-	unsigned char len;
-	unsigned char prty;
-}Can_Msg;
+	unsigned int Can_MsgTypeId;
+	unsigned char Can_MsgTypeIde;
+	unsigned char Can_MsgTypeData[Msg_MaxLen];
+	unsigned char Can_MsgTypeLen;
+	unsigned char Can_MsgTypePrty;
+}Can_MsgType;
 
 typedef struct _can_time
 {
-	int time_a;
-	int time_b;
-	int time_c;
-	int time_sum;
-}Can_Time;
+	int Can_TimeTypeData1;
+	int Can_TimeTypeData2;
+	int Can_TimeTypeData3;
+	int Can_TimeTypeData4;
+}Can_TimeType;
 
-static Can_Msg CanMsg_1 =
+static Can_MsgType Can_MsgTypeSendData1 =
 {
 	0x01,
 	0,
@@ -43,7 +43,7 @@ static Can_Msg CanMsg_1 =
 	0,
 };
 
-static Can_Msg CanMsg_2 =
+static Can_MsgType Can_MsgTypeSendData2 =
 {
 	0x02,
 	0,
@@ -51,7 +51,7 @@ static Can_Msg CanMsg_2 =
 	8,
 	0,
 };
-static Can_Msg CanMsg_3 =
+static Can_MsgType Can_MsgTypeSendData3 =
 {
 	0x03,
 	0,
@@ -60,7 +60,7 @@ static Can_Msg CanMsg_3 =
 	0,
 };
 
-static Can_Time Can_Time_Type =
+static Can_TimeType Can_TimeTypeSendData =
 {
 	40,
 	50,
@@ -68,12 +68,12 @@ static Can_Time Can_Time_Type =
 	104,
 };
 
-static CAN_TYPE CAN_HwCfg =
+static CAN_InitType CAN_InitTypeSendData =
 {
 	CAN_125K,
 };
 
-static Can_Msg Can1_GetType =
+static Can_MsgType Can_MsgTypeGetData =
 {
  	0x00,
 	0,
@@ -82,11 +82,11 @@ static Can_Msg Can1_GetType =
 	0,
 };
 
-void CAN1_Init(void);
-void CAN_INIT(CAN_TYPE *Can_InitData);
-void CAN_Send_TIME(Can_Time Can_TimeType);
-void CanMsg_SendAll(void);
-extern Bool CAN1_GetCallBack(void);
+void CAN_Init(void);
+void CAN1_Init(CAN_TYPE *Can_InitData);
+void CAN_SendTime(Can_Time Can_TimeType);
+void Can_MsgSendAll(void);
+Bool CAN_GetCallBack(void);
 
 
 #endif

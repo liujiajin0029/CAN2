@@ -13,10 +13,10 @@ void main(void)
   /* put your own code here */
 
   DisableInterrupts;
-  PLL_init();
-  CAN1_Init();
-  PIT_Init();
-  initialize_ect();
+  PLL_INIT();
+  CAN_INIT();
+  PIT_INIT();
+  ECT_INIT();
   EnableInterrupts;
   MODE_ONE=1;
   MODE_ONE_dir=1;
