@@ -22,7 +22,7 @@ void CAN1_INIT(Can_InitType *Can_InitTypeCfg)
 	if (Can_InitTypeCfg->Can_InitTypeBPS == CAN_BSPTYPE125K)
 	{
 		CAN1BTR1 |= 0x1D;
-		CAN1BTR0_BRP = 0X0E;
+		CAN1BTR0_BRP = 0x0E;
 	}
 	else if (Can_InitTypeCfg->Can_InitTypeBPS == CAN_BSPTYPE250K)
 	{
@@ -109,11 +109,11 @@ Bool Can_SendMsg(Can_MsgType *Can_MsgTypeCfg)
 /*报文周期发送函数*/
 void Can_SendTime(Can_TimeType Can_TimeTypeCfg)
 {
-	static int Can_TMIE ;
+	static int Can_TIME ;
 
-	Can_TMIE++;
+	Can_TIME++;
 
-	if (Can_TMIE == 50)
+	if (Can_TIME == 50)
 	{
     	Can_SendMsg(&Can_MsgTypeSendData1);
 	}
@@ -121,7 +121,7 @@ void Can_SendTime(Can_TimeType Can_TimeTypeCfg)
 	{
 
 	}
-	if (Can_TMIE == 70)
+	if (Can_TIME == 70)
 	{
     	Can_SendMsg(&Can_MsgTypeSendData2);
 	}
@@ -129,7 +129,7 @@ void Can_SendTime(Can_TimeType Can_TimeTypeCfg)
 	{
 
 	}
-	if (Can_TMIE == 90)
+	if (Can_TIME == 90)
 	{
     	Can_SendMsg(&Can_MsgTypeSendData3);
 	}
@@ -137,9 +137,9 @@ void Can_SendTime(Can_TimeType Can_TimeTypeCfg)
 	{
 
 	}
-   if (Can_TMIE >= 100)
+   if (Can_TIME >= 100)
 	{
-    	Can_TMIE = 0;
+    	Can_TIME = 0;
 	}
 	else
 	{
@@ -205,6 +205,7 @@ Bool Can_GetMsg(Can_MsgType *Can_MsgTypeCfg)
 
 	return TRUE;
 }
+
 /*接收报文数据处理函数*/
 Bool Can_GetCallBack(void)
 {

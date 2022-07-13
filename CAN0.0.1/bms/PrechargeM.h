@@ -4,21 +4,12 @@
 #include "hidef.h"
 #include "derivative.h"
 
-typedef struct PrechargeM_HvData
-{
-	float vbat_mV;
-	float v1_mV;
-	int state_vbat;
-	int state_v1;
-}PrechargeM_StateType;
-
-/* Status parameters*/
 typedef enum
 {
-    PrechargeM_Ok                  	 = 0,		/*正常*/
-    PrechargeM_Busy_Ok             	 = 1,		/*正在运行*/
-    PrechargeM_Request_Pending       = 2,		/*请求挂起*/
-    PrechargeM_Already_Initialized	 = 3,		/*已初始化*/
+    PRECHARGEM_OK                  	 = 0,		/*正常*/
+    PRECHARGEM_BUSY_OK             	 = 1,		/*正在运行*/
+    PRECHARGEM_REQUEST_PENDING       = 2,		/*请求挂起*/
+    PRECHARGEM_ALREADY_INITIALIZED	 = 3,		/*已初始化*/
 } PrechargeM_ReturnType;
 
 typedef struct _Fault
