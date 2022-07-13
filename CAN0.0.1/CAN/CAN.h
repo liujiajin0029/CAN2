@@ -4,7 +4,7 @@
 #include "hidef.h"
 #include "derivative.h"
 
-#define Msg_MaxLen 8
+#define Can_MsgTypeDataMaxLen 8
 
 typedef enum _CAN_BSP_Type
 {
@@ -19,11 +19,11 @@ typedef struct _CAN_HwCfgType
 
 typedef struct _can_msg
 {
-	unsigned int Can_MsgTypeId;
-	unsigned char Can_MsgTypeIde;
-	unsigned char Can_MsgTypeData[Msg_MaxLen];
-	unsigned char Can_MsgTypeLen;
-	unsigned char Can_MsgTypePrty;
+	unsigned int Id;
+	unsigned char Ide;
+	unsigned char Data[Can_MsgTypeDataMaxLen];
+	unsigned char Len;
+	unsigned char Prty;
 }Can_MsgType;
 
 typedef struct _can_time
@@ -82,10 +82,10 @@ static Can_MsgType Can_MsgTypeGetData =
 	0,
 };
 
-void CAN_Init(void);
-void CAN1_Init(CAN_TYPE *Can_InitData);
-void CAN_SendTime(Can_Time Can_TimeType);
-void Can_MsgSendAll(void);
+void CAN_INIT(void);
+void CAN1_Init(CAN_InitType *CAN_InitTypeCfg);
+void CAN_SendTime(Can_TimeType Can_TimeTypeCfg);
+void Can_SendMsgAll(void);
 Bool CAN_GetCallBack(void);
 
 

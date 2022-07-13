@@ -44,12 +44,12 @@ void CAN1_Init(CAN_InitType *CAN_InitTypeCfg)
 }
 
 /*报文发送函数*/
-Bool CAN_SendMsg(Can_MsgType *CAN_InitTypeCfg)
+Bool CAN_SendMsg(Can_MsgType *Can_MsgTypeCfg)
 {
 	unsigned char SendBuf, sp;
 
 	/*判断发送报文长度*/
-	if (CAN_InitTypeCfg->len > Msg_MaxLen)
+	if (Can_MsgTypeCfg->Len > Can_MsgTypeDataMaxLen)
 	{
 		return FALSE;
 	}
@@ -72,34 +72,32 @@ Bool CAN_SendMsg(Can_MsgType *CAN_InitTypeCfg)
 	}while (!(SendBuf));
 
 	/*扩展帧ID发送*/
-	if (CAN_InitTypeCfg->Can_MsgTypeIde)
+	if (Can_MsgTypeCfg->Ide)
 	{
-  	CAN1TXIDR0 = (unsigned char)(CAN_InitTypeCfg->Can_MsgTypeId >> 21);
-  	CAN1TXIDR1 = (unsigned char)(CAN_InitTypeCfg->Can_MsgTypeId >> 13) & 0xE0;
+  	CAN1TXIDR0 = (unsigned char)(Can_MsgTypeCfg->Id >> 21);
+  	CAN1TXIDR1 = (unsigned char)(Can_MsgTypeCfg->Id >> 13) & 0xE0;
   	CAN1TXIDR1 |= 0x18;
-  	CAN1TXIDR1 |= (unsigned char)(CAN_InitTypeCfg->Can_MsgTypeId >> 15) & 0x07;
-  	CAN1TXIDR2 = (unsigned char)(CAN_InitTypeCfg->Can_MsgTypeId >> 7);
-  	CAN1TXIDR3 = (unsigned char)(CAN_InitTypeCfg->Can_MsgTypeId << 1);
-
+  	CAN1TXIDR1 |= (unsigned char)(Can_MsgTypeCfg->Id >> 15) & 0x07;
+  	CAN1TXIDR2 = (unsigned char)(Can_MsgTypeCfg->Id >> 7);
+  	CAN1TXIDR3 = (unsigned char)(Can_MsgTypeCfg->Id << 1);
 	CAN1TXIDR3 |= 0x01;
-
 	}
 	else
 	{
 	/*标准帧ID发送*/
-  	CAN1TXIDR0 = (unsigned char)(CAN_InitTypeCfg->Can_MsgTypeId>>3);
-  	CAN1TXIDR1 = (unsigned char)(CAN_InitTypeCfg->Can_MsgTypeId<<5);
+  	CAN1TXIDR0 = (unsigned char)(Can_MsgTypeCfg->Id>>3);
+  	CAN1TXIDR1 = (unsigned char)(Can_MsgTypeCfg->Id<<5);
 	}
 
 	/*报文数据发送*/
-	for (sp = 0; sp < CAN_InitTypeCfg->len;sp++)
+	for (sp = 0; sp < Can_MsgTypeCfg->Len;sp++)
 	{
-		*((&CAN1TXDSR0) + sp) = CAN_InitTypeCfg-> Can_MsgTypeData[sp];
+		*((&CAN1TXDSR0) + sp) = Can_MsgTypeCfg-> Data[sp];
 	}
 	/*报文长度发送*/
-	CAN1TXDLR = CAN_InitTypeCfg-> Can_MsgTypeLen;
+	CAN1TXDLR = Can_MsgTypeCfg-> Len;
 
-	CAN1TXTBPR = CAN_InitTypeCfg-> Can_MsgTypePrty;
+	CAN1TXTBPR = Can_MsgTypeCfg-> Prty;
 	/*清除标志*/
 	CAN1TFLG = SendBuf;
 
@@ -115,7 +113,7 @@ void CAN_SendTime(Can_TimeType Can_TimeTypeCfg)
 
 	if (CAN_TMIE == 50)
 	{
-      CAN_SendMsg(&Can_MsgTypeSendData1);
+    	CAN_SendMsg(&Can_MsgTypeSendData1);
 	}
 	else
 	{
@@ -123,7 +121,7 @@ void CAN_SendTime(Can_TimeType Can_TimeTypeCfg)
 	}
 	if (CAN_TMIE == 70)
 	{
-      CAN_SendMsg(&Can_MsgTypeSendData2);
+    	CAN_SendMsg(&Can_MsgTypeSendData2);
 	}
 	else
 	{
@@ -131,7 +129,7 @@ void CAN_SendTime(Can_TimeType Can_TimeTypeCfg)
 	}
 	if (CAN_TMIE == 90)
 	{
-     CAN_SendMsg(&Can_MsgTypeSendData3);
+    	CAN_SendMsg(&Can_MsgTypeSendData3);
 	}
 	else
 	{
@@ -139,7 +137,7 @@ void CAN_SendTime(Can_TimeType Can_TimeTypeCfg)
 	}
    if (CAN_TMIE >= 100)
 	{
-     CAN_TMIE = 0;
+    	CAN_TMIE = 0;
 	}
 	else
 	{
@@ -148,9 +146,9 @@ void CAN_SendTime(Can_TimeType Can_TimeTypeCfg)
 }
 
 /*发送所有函数*/
-void Can_MsgSendAll(void)
+void Can_SendMsgAll(void)
 {
-	CAN_Send_TIME(Can_MsgTypeGetData);
+	CAN_SendTime(Can_TimeTypeSendData);
 }
 
 /*报文接收函数*/
@@ -180,25 +178,25 @@ Bool CAN_GetMsg(Can_MsgType *Can_MsgTypeCfg)
 
 	}
 	/*读标识符*/
-   Can_MsgTypeCfg ->Can_MsgTypeId = (unsigned int)(CAN1RXIDR0<<3) |
+   Can_MsgTypeCfg ->Id = (unsigned int)(CAN1RXIDR0<<3) |
             (unsigned char)(CAN1RXIDR1>>5);
 
 	if(CAN1RXIDR1&0x10)
 	{
-		Can_MsgTypeCfg->RTR = TRUE;
+		Can_MsgTypeCfg->Ide = TRUE;
 	}
 	else
   	{
-    	Can_MsgTypeCfg->RTR = FALSE;
+    	Can_MsgTypeCfg->Ide = FALSE;
     }
 
 	/*读取数据长度 */
-	Can_MsgTypeCfg->len = CAN1RXDLR;
+	Can_MsgTypeCfg->Len = CAN1RXDLR;
 
 	/*读取数据*/
-	for(sp = 0; sp < Can_MsgTypeCfg->len; sp++)
+	for(sp = 0; sp < Can_MsgTypeCfg->Len; sp++)
   	{
-    	Can_MsgTypeCfg->data[sp] = *((&CAN1RXDSR0)+sp);
+    	Can_MsgTypeCfg->Data[sp] = *((&CAN1RXDSR0)+sp);
 	}
 	/*清RXF标志位 (缓冲器准备接收)*/
 	CAN1RFLG = 0x01;
@@ -208,12 +206,12 @@ Bool CAN_GetMsg(Can_MsgType *Can_MsgTypeCfg)
 /*接收报文数据处理函数*/
 Bool CAN_GetCallBack(void)
 {
-	if (CAN1GetMsg(&Can_MsgTypeGetData) == TRUE)
+	if (CAN_GetMsg(&Can_MsgTypeGetData) == TRUE)
 	{
 		/*接收信息*/
-		if (Can_MsgTypeGetData.Can_MsgTypeId == 0x3c && (!Can_MsgTypeGetData.ide))
+		if (Can_MsgTypeGetData.Id == 0x3c && (!Can_MsgTypeGetData.Ide))
 		{
-			CAN_SendMsg(CanMsg_3);
+			CAN_SendMsg(&Can_MsgTypeSendData3);
 		}
 		else
 		{

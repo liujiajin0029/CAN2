@@ -17,7 +17,7 @@ void PIT_INIT(void)
 void interrupt VectorNumber_Vpit0 PIT0(void)
 {
 	PITTF_PTF0 = 1;
-	CanMsg_SendAll();
+	Can_SendMsgAll();
 }
 
 #pragma CODE_SEG DEFAULT
@@ -27,7 +27,7 @@ void interrupt VectorNumber_Vpit0 PIT0(void)
 
 void interrupt VectorNumber_Vcan1rx CAN_receive(void)
 {
-	CAN1_GetCallBack();
+	CAN_GetCallBack();
 }
 
 #pragma CODE_SEG DEFAULT
