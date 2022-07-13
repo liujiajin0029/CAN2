@@ -1,10 +1,10 @@
 #include "Node.h"
 
 /*节点状态机程序，返回值为节点状态*/
-extern PrechargeM_RETURN_TYPE  NOdeData_CallBcak(_NODE_STATE NODE_STATE)
+extern PrechargeM_ReturnType  NOdeData_CallBcak(_NODE_STATE NODE_STATE)
 {
   static int OS_Timer;
-  PrechargeM_RETURN_TYPE retval;
+  PrechargeM_ReturnType retval;
 
   switch (NODE_STATE.Node_ReturnState)
 	{

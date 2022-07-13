@@ -11,10 +11,7 @@ void PLL_INIT(void)
 	PLLCTL_PLLON = 1;
 	_asm(nop);
 	_asm(nop);
-	while(CRGFLG_LOCK == 0)
-	{
 
-	}
 	CLKSEL_PLLSEL = 1;
 }
 

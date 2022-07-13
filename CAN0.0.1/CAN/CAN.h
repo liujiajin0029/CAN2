@@ -4,26 +4,26 @@
 #include "hidef.h"
 #include "derivative.h"
 
-#define Can_MsgTypeDataMaxLen 8
+#define CAN_MSGTYPE_DATA_MAXLEN 8
 
-typedef enum _CAN_BSP_Type
+typedef enum CAN_BSP
 {
-	CAN_125K = 0,
-	CAN_250K = 1,
-}CAN_BSPType;
+	CAN_BSPTYPE125K = 0,
+	CAN_BSPTYPE250K = 1,
+}Can_BspType;
 
-typedef struct _CAN_HwCfgType
+typedef struct _Can_HwCfgType
 {
-	CAN_BSPType BPS;
-}CAN_InitType;
+	Can_BspType Can_InitTypeBPS;
+}Can_InitType;
 
-typedef struct _can_msg
+typedef struct Can_msg
 {
-	unsigned int Id;
-	unsigned char Ide;
-	unsigned char Data[Can_MsgTypeDataMaxLen];
-	unsigned char Len;
-	unsigned char Prty;
+	unsigned int Can_MsgTypeId;
+	unsigned char Can_MsgTypeIde;
+	unsigned char Can_MsgTypeData[CAN_MSGTYPE_DATA_MAXLEN];
+	unsigned char Can_MsgTypeLen;
+	unsigned char Can_MsgTypePrty;
 }Can_MsgType;
 
 typedef struct _can_time
@@ -68,9 +68,9 @@ static Can_TimeType Can_TimeTypeSendData =
 	104,
 };
 
-static CAN_InitType CAN_InitTypeSendData =
+static Can_InitType Can_InitTypeSendData =
 {
-	CAN_125K,
+	CAN_BSPTYPE125K,
 };
 
 static Can_MsgType Can_MsgTypeGetData =
@@ -83,10 +83,10 @@ static Can_MsgType Can_MsgTypeGetData =
 };
 
 void CAN_INIT(void);
-void CAN1_Init(CAN_InitType *CAN_InitTypeCfg);
-void CAN_SendTime(Can_TimeType Can_TimeTypeCfg);
+void CAN1_INIT(Can_InitType *Can_InitTypeCfg);
+void Can_SendTime(Can_TimeType Can_TimeTypeCfg);
 void Can_SendMsgAll(void);
-Bool CAN_GetCallBack(void);
+Bool Can_GetCallBack(void);
 
 
 #endif

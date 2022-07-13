@@ -23,9 +23,9 @@ typedef enum
 
 typedef struct _Fault
 {
-	Bool FaultData1;
-	Bool FaultData2;
-	Bool FaultData3;
+	Bool PrechargeM_FaultTypeData1;
+	Bool PrechargeM_FaultTypeData2;
+	Bool PrechargeM_FaultTypeData3;
 }PrechargeM_FaultType;
 
 int PrechargeM_IsFail(void);

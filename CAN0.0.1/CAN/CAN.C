@@ -1,13 +1,12 @@
 #include "derivative.h"
-#include "CAN.h"
 
 void CAN_INIT(void)
 {
-	CAN1_Init(&CAN_InitTypeSendData);
+	CAN1_INIT(&Can_InitTypeSendData);
 }
 
 /*CAN初始化函数*/
-void CAN1_Init(CAN_InitType *CAN_InitTypeCfg)
+void CAN1_INIT(Can_InitType *Can_InitTypeCfg)
 {
 	if (CAN1CTL0_INITRQ == 0)
 	{
@@ -20,16 +19,19 @@ void CAN1_Init(CAN_InitType *CAN_InitTypeCfg)
 
 	CAN1BTR0_SJW = 0;
 
-	if (CAN_InitTypeCfg->BPS == CAN_125K)
+	if (Can_InitTypeCfg->Can_InitTypeBPS == CAN_BSPTYPE125K)
 	{
 		CAN1BTR1 |= 0x1D;
 		CAN1BTR0_BRP = 0X0E;
 	}
-	else if (CAN_InitTypeCfg->BPS == CAN_250K)
+	else if (Can_InitTypeCfg->Can_InitTypeBPS == CAN_BSPTYPE250K)
 	{
 
 	}
+	else
+	{
 
+	}
 	CAN1IDMR0 = 0xFF;
 	CAN1IDMR1 = 0xFF;
 	CAN1IDMR3 = 0xFF;
@@ -44,12 +46,12 @@ void CAN1_Init(CAN_InitType *CAN_InitTypeCfg)
 }
 
 /*报文发送函数*/
-Bool CAN_SendMsg(Can_MsgType *Can_MsgTypeCfg)
+Bool Can_SendMsg(Can_MsgType *Can_MsgTypeCfg)
 {
 	unsigned char SendBuf, sp;
 
 	/*判断发送报文长度*/
-	if (Can_MsgTypeCfg->Len > Can_MsgTypeDataMaxLen)
+	if (Can_MsgTypeCfg->Can_MsgTypeLen > CAN_MSGTYPE_DATA_MAXLEN)
 	{
 		return FALSE;
 	}
@@ -72,32 +74,32 @@ Bool CAN_SendMsg(Can_MsgType *Can_MsgTypeCfg)
 	}while (!(SendBuf));
 
 	/*扩展帧ID发送*/
-	if (Can_MsgTypeCfg->Ide)
+	if (Can_MsgTypeCfg->Can_MsgTypeIde)
 	{
-  	CAN1TXIDR0 = (unsigned char)(Can_MsgTypeCfg->Id >> 21);
-  	CAN1TXIDR1 = (unsigned char)(Can_MsgTypeCfg->Id >> 13) & 0xE0;
+  	CAN1TXIDR0 = (unsigned char)(Can_MsgTypeCfg->Can_MsgTypeId >> 21);
+  	CAN1TXIDR1 = (unsigned char)(Can_MsgTypeCfg->Can_MsgTypeId >> 13) & 0xE0;
   	CAN1TXIDR1 |= 0x18;
-  	CAN1TXIDR1 |= (unsigned char)(Can_MsgTypeCfg->Id >> 15) & 0x07;
-  	CAN1TXIDR2 = (unsigned char)(Can_MsgTypeCfg->Id >> 7);
-  	CAN1TXIDR3 = (unsigned char)(Can_MsgTypeCfg->Id << 1);
+  	CAN1TXIDR1 |= (unsigned char)(Can_MsgTypeCfg->Can_MsgTypeId >> 15) & 0x07;
+  	CAN1TXIDR2 = (unsigned char)(Can_MsgTypeCfg->Can_MsgTypeId >> 7);
+  	CAN1TXIDR3 = (unsigned char)(Can_MsgTypeCfg->Can_MsgTypeId << 1);
 	CAN1TXIDR3 |= 0x01;
 	}
 	else
 	{
 	/*标准帧ID发送*/
-  	CAN1TXIDR0 = (unsigned char)(Can_MsgTypeCfg->Id>>3);
-  	CAN1TXIDR1 = (unsigned char)(Can_MsgTypeCfg->Id<<5);
+  	CAN1TXIDR0 = (unsigned char)(Can_MsgTypeCfg->Can_MsgTypeId>>3);
+  	CAN1TXIDR1 = (unsigned char)(Can_MsgTypeCfg->Can_MsgTypeId<<5);
 	}
 
 	/*报文数据发送*/
-	for (sp = 0; sp < Can_MsgTypeCfg->Len;sp++)
+	for (sp = 0; sp < Can_MsgTypeCfg->Can_MsgTypeLen;sp++)
 	{
-		*((&CAN1TXDSR0) + sp) = Can_MsgTypeCfg-> Data[sp];
+		*((&CAN1TXDSR0) + sp) = Can_MsgTypeCfg-> Can_MsgTypeData[sp];
 	}
 	/*报文长度发送*/
-	CAN1TXDLR = Can_MsgTypeCfg-> Len;
+	CAN1TXDLR = Can_MsgTypeCfg-> Can_MsgTypeLen;
 
-	CAN1TXTBPR = Can_MsgTypeCfg-> Prty;
+	CAN1TXTBPR = Can_MsgTypeCfg-> Can_MsgTypePrty;
 	/*清除标志*/
 	CAN1TFLG = SendBuf;
 
@@ -105,39 +107,39 @@ Bool CAN_SendMsg(Can_MsgType *Can_MsgTypeCfg)
 }
 
 /*报文周期发送函数*/
-void CAN_SendTime(Can_TimeType Can_TimeTypeCfg)
+void Can_SendTime(Can_TimeType Can_TimeTypeCfg)
 {
-	static int CAN_TMIE ;
+	static int Can_TMIE ;
 
-	CAN_TMIE++;
+	Can_TMIE++;
 
-	if (CAN_TMIE == 50)
+	if (Can_TMIE == 50)
 	{
-    	CAN_SendMsg(&Can_MsgTypeSendData1);
+    	Can_SendMsg(&Can_MsgTypeSendData1);
 	}
 	else
 	{
 
 	}
-	if (CAN_TMIE == 70)
+	if (Can_TMIE == 70)
 	{
-    	CAN_SendMsg(&Can_MsgTypeSendData2);
+    	Can_SendMsg(&Can_MsgTypeSendData2);
 	}
 	else
 	{
 
 	}
-	if (CAN_TMIE == 90)
+	if (Can_TMIE == 90)
 	{
-    	CAN_SendMsg(&Can_MsgTypeSendData3);
+    	Can_SendMsg(&Can_MsgTypeSendData3);
 	}
 	else
 	{
 
 	}
-   if (CAN_TMIE >= 100)
+   if (Can_TMIE >= 100)
 	{
-    	CAN_TMIE = 0;
+    	Can_TMIE = 0;
 	}
 	else
 	{
@@ -148,17 +150,17 @@ void CAN_SendTime(Can_TimeType Can_TimeTypeCfg)
 /*发送所有函数*/
 void Can_SendMsgAll(void)
 {
-	CAN_SendTime(Can_TimeTypeSendData);
+	Can_SendTime(Can_TimeTypeSendData);
 }
 
 /*报文接收函数*/
-Bool CAN_GetMsg(Can_MsgType *Can_MsgTypeCfg)
+Bool Can_GetMsg(Can_MsgType *Can_MsgTypeCfg)
 {
 
 	unsigned char sp;
 
 	/*检测接收标志*/
-	if(!(CAN1RFLG_RXF))
+	if (!(CAN1RFLG_RXF))
 	{
 		return(FALSE);
 	}
@@ -168,7 +170,7 @@ Bool CAN_GetMsg(Can_MsgType *Can_MsgTypeCfg)
 	}
 
 	/*检测 CAN协议报文模式 （一般/扩展） 标识符*/
-	if(CAN1RXIDR1_IDE)
+	if (CAN1RXIDR1_IDE)
 	{
     // IDE = Recessive (Extended Mode)
     	return(FALSE);
@@ -178,25 +180,25 @@ Bool CAN_GetMsg(Can_MsgType *Can_MsgTypeCfg)
 
 	}
 	/*读标识符*/
-   Can_MsgTypeCfg ->Id = (unsigned int)(CAN1RXIDR0<<3) |
-            (unsigned char)(CAN1RXIDR1>>5);
+    Can_MsgTypeCfg ->Can_MsgTypeId = (unsigned int)(CAN1RXIDR0<<3) |
+            						 (unsigned char)(CAN1RXIDR1>>5);
 
-	if(CAN1RXIDR1&0x10)
+	if (CAN1RXIDR1 & 0x10)
 	{
-		Can_MsgTypeCfg->Ide = TRUE;
+		Can_MsgTypeCfg->Can_MsgTypeIde = TRUE;
 	}
 	else
   	{
-    	Can_MsgTypeCfg->Ide = FALSE;
+    	Can_MsgTypeCfg->Can_MsgTypeIde = FALSE;
     }
 
 	/*读取数据长度 */
-	Can_MsgTypeCfg->Len = CAN1RXDLR;
+	Can_MsgTypeCfg->Can_MsgTypeLen = CAN1RXDLR;
 
 	/*读取数据*/
-	for(sp = 0; sp < Can_MsgTypeCfg->Len; sp++)
+	for (sp = 0; sp < Can_MsgTypeCfg->Can_MsgTypeLen; sp++)
   	{
-    	Can_MsgTypeCfg->Data[sp] = *((&CAN1RXDSR0)+sp);
+    	Can_MsgTypeCfg->Can_MsgTypeData[sp] = *((&CAN1RXDSR0)+sp);
 	}
 	/*清RXF标志位 (缓冲器准备接收)*/
 	CAN1RFLG = 0x01;
@@ -204,14 +206,14 @@ Bool CAN_GetMsg(Can_MsgType *Can_MsgTypeCfg)
 	return TRUE;
 }
 /*接收报文数据处理函数*/
-Bool CAN_GetCallBack(void)
+Bool Can_GetCallBack(void)
 {
-	if (CAN_GetMsg(&Can_MsgTypeGetData) == TRUE)
+	if (Can_GetMsg(&Can_MsgTypeGetData) == TRUE)
 	{
 		/*接收信息*/
-		if (Can_MsgTypeGetData.Id == 0x3c && (!Can_MsgTypeGetData.Ide))
+		if (Can_MsgTypeGetData.Can_MsgTypeId == 0x3c && (!Can_MsgTypeGetData.Can_MsgTypeIde))
 		{
-			CAN_SendMsg(&Can_MsgTypeSendData3);
+			Can_SendMsg(&Can_MsgTypeSendData3);
 		}
 		else
 		{

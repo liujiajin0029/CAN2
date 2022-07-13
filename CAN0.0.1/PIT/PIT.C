@@ -25,9 +25,9 @@ void interrupt VectorNumber_Vpit0 PIT0(void)
 
 #pragma CODE_SEG __NEAR_SEG NON_BANKED
 
-void interrupt VectorNumber_Vcan1rx CAN_receive(void)
+void interrupt VectorNumber_Vcan1rx Can_receive(void)
 {
-	CAN_GetCallBack();
+	Can_GetCallBack();
 }
 
 #pragma CODE_SEG DEFAULT

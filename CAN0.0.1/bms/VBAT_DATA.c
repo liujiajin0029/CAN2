@@ -1,6 +1,6 @@
-#include "derivative.h" 
+#include "derivative.h"
 
-PrechargeM_RETURN_TYPE VOLTAGE_State[VBAT_SUM][4] = {0};
+PrechargeM_ReturnType VOLTAGE_State[VBAT_SUM][4] = {0};
 
  //高压管理模块由初始化函数Hv_Init();
  void Hv_Init(void)
@@ -18,9 +18,9 @@ PrechargeM_RETURN_TYPE VOLTAGE_State[VBAT_SUM][4] = {0};
 	return 9;
  }
 
-PrechargeM_RETURN_TYPE  HV_Call(HV_DATA HV_DATAtype)
+PrechargeM_ReturnType  HV_Call(HV_DATA HV_DATAtype)
 {
-   
+
 	if (HV_DATAtype.BAT > VOLTAGE_THRESHOLD_H && HV_DATAtype.BAT < VOLTAGE_THRESHOLD_L)
 	{
 		return PrechargeM_Ok;
@@ -28,8 +28,8 @@ PrechargeM_RETURN_TYPE  HV_Call(HV_DATA HV_DATAtype)
 	else
 	{
 		return PrechargeM_Request_Pending;
-	} 
-}       
+	}
+}
 
 
 void HV_CallBack(int num_calls)
@@ -40,6 +40,6 @@ void HV_CallBack(int num_calls)
       VOLTAGE_State[0][1] = PrechargeM_Ok;
       break;
 	}
-}    
-      
+}
+
 
